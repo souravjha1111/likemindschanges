@@ -1,3 +1,5 @@
+#resourcetable2 consist of a list of resources with userdata as a dict, which contains list of users with their access type on this resource, it alos has a value as universalAccessType 
+#   which defines it's access type for all users
 
 resourcesTable2 = [
     {
@@ -6,24 +8,46 @@ resourcesTable2 = [
                 "1":"read",
                 "2":"write"
             },
-            "accessType":"none"
+            "universalAccessType":"none"
         }
        } ]
 
+
+#usertable contains a list of users with their type that can be user or admin
 usersTable = [
     {
         "1":"user",
-        "2":"none"
+        "2":"admin"
     }
 ]
 
-def addResource(name):
-    print(resourcesTable2)
-    resourcesTable2[0][name] = {}
-    print(resourcesTable2)
+def addAccess(type):# type is read or write
+    for resourceValue in resourcesTable2:
+        if resourceValue["image"]:
+            resourceValue["image"]['universalAccessType']  = type         
 
-# def addAccessOnResourceToRole(accessType, resource, role):
-#     if usersTable[0][]
+
+def addResource(name): # name is resource name
+    resourcesTable2[0][name] = {
+        "userdata":{},
+        "universalAccessType":"none"
+    }
+ 
+def addActionOnResource(accessType, resourceName):
+    for resourceValue in resourcesTable2:
+        if resourceValue[resourceName]:
+            resourceValue[resourceName]['universalAccessType']  = accessType
+         
+
+
+def addAccessOnResourceToRole(access, resource, role):
+    print("before addAccessOnResourceToRole",resourcesTable2)
+    for users in usersTable:
+        for val in users:
+            if usersTable[0][val] == role:
+                resourcesTable2[0][resource]['userdata'][val] = access
+    print("after addAccessOnResourceToRole",resourcesTable2)
+
 
 def checkAccess(user, resource, accessType):
     for resourceValue in resourcesTable2:
@@ -34,9 +58,15 @@ def checkAccess(user, resource, accessType):
                         return "yes"
                     else:
                         return "no" 
-        #     return "usernotfound"
-        # else:
-        #     return "resource not found"
+
+
+def addUser(user):
+    print("before addUser", usersTable)
+    usersTable[0][user] = "user"
+    print("after addUser", usersTable)
+
+
+
 
 def addRoleToUser(role,userId):
     print(usersTable)
@@ -45,19 +75,8 @@ def addRoleToUser(role,userId):
             usersTable[0][userId] = role
     print(usersTable)
 
-def addUser(user):
-    usersTable[0][user] = "user"
-
-
-def addAccess(type):
-    for resourceValue in resourcesTable2:
-        if resourceValue["image"]:
-            resourceValue["image"]['accessType']  = type         
-
-addUser(3)
-
-addRoleToUser("admin","2")
-# for val in usersTable:
-#     print(val)
-print(checkAccess("1","image","read"))
-addResource("iamge2")
+# addAccess("read")
+# addResource("iamge2")
+# addAccessOnResourceToRole("write","image")
+# addAccessOnResourceToRole("read", "image","admin")
+# checkAccess("1","image","read")
